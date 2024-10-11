@@ -1,0 +1,10 @@
+[package]
+name = "rei"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ratatui = { version = "0.28.1", features = ["palette", "all-widgets", "document-features", "macros"] }
+ratatui-textarea = { version = "0.4.1", features = ["search", "ratatui"] }
+tui-textarea = { version = "0.6.1", features = ["search"] }
+crossterm = "0.28.1"
