@@ -1,10 +1,22 @@
 [package]
 name = "rei"
+description = "a interface for manage repositories"
 version = "0.1.0"
 edition = "2021"
-
+readme = "README.md"
+keywords = ["commit","check"]
+categories = ["development-tools"]
+repository  = "https://github.com/otechdo/rei"
+license = "AGPL-3"
 [dependencies]
 ratatui = { version = "0.28.1", features = ["palette", "all-widgets", "document-features", "macros"] }
 ratatui-textarea = { version = "0.4.1", features = ["search", "ratatui"] }
 tui-textarea = { version = "0.6.1", features = ["search"] }
 crossterm = "0.28.1"
+
+[features]
+default = ["en"]
+en = []
+fr = []
+es = []
+it = []
