@@ -14,159 +14,139 @@ use std::io::Stdout;
 use std::process::{Command, Stdio};
 use tui_textarea::TextArea;
 
-const COMMIT_TEMPLATE :&str = "# %title%
+const COMMIT_TEMPLATE :&str = "@%title%
 
 %description%
 
-### Steps to reproduce
+@Steps
 
 %steps%
 
-### Expected behavior
+@Behavior
 
 %expected_description%
 
-## Resolution
-
-Explains the state of the system before and after the changes
-
-### Before
+@Before
 
 %system_before%
 
-### After
+@After
 
 %system_after%
 
-### Expectation
+@Expectation
 
 %expectation%
 
-### Samples
+@Samples
 
 %samples%
 
-## Security
-
-The security section discusses any security-related impacts that may arise from the newly added authentication system
-
-### Vulnerabilities
+@Vulnerabilities
 
 %vulnerabilities%
 
-### Quality
+@Quality
 
 %qualities%
 
-### Conformity
+@Conformity
 
 %conformity%
 
-### Risk
+@Risk
 
 %risk%
 
-## Tests
-
-### Added
+@Added
 
 %tests_added%
 
-### Updated
+@Updated
 
 %tests_updated%
 
-### Deleted
+@Deleted
 
 %test_deleted%
 
-### Platforms
+@Platforms
 
 %tested_platforms%
 
-## Requirements
-
-### BREAKING CHANGES
+@Breaking
 
 %breaking_changes%
 
-### Dependencies
+@Dependencies
 
 %dependencies%
 
-### Rollback
+@Rollback
 
 %rollbacks%
 
-## Database
-
-### Up
+@Up
 
 %db_up%
 
-### Down
+@Down
 
 %db_down%
 
-### Changes
+@Changes
 
 %db_changes%
 
-### Why
+@Why
 
 %why_db_changes%
 
-## Communication
-
-### Authors
+@Authors
 
 %authors%
 
-### Testers
+@Testers
 
 %testers%
 
-### Comments
+@Comments
 
 %comments%
 
-### Notes
+@Notes
 
 %notes%
 
-## Ideas
-
-### News headline
+@Head
 
 %news_headline%
 
-### Workflow
+@Workflow
 
 %workflow%
 
-### Examples
+@Samples
 
 %workflows_samples%
 
-### Technical considerations
+@Considerations
 
 %technical_considerations%
 
-## Next
-
-### Description
+@Next
 
 %next_description%
 
-### Motivation
+@Motivation
 
 %next_motivation%
 
-### Why implement it
+@Why
 
 %next_reasons%
 
-### Related Links
+@Links
 
 %next_links%
 
