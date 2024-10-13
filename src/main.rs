@@ -1,16 +1,51 @@
 #![allow(clippy::too_many_lines)]
 #![allow(clippy::multiple_crate_versions)]
 
+use crate::PageIndex::{Page0, Page1, Page2, Page3, Page4, Page5, Page6};
 use crossterm::event::{self, Event, KeyCode};
 use ratatui::backend::CrosstermBackend;
 use ratatui::layout::{Alignment, Constraint, Direction, Layout};
 use ratatui::style::{Color, Style, Stylize};
 use ratatui::widgets::{Block, BorderType, Borders, Padding};
 use ratatui::{CompletedFrame, Terminal};
+use serde::Serialize;
 use std::fmt::{Display, Formatter};
 use std::io::Stdout;
+use std::process::{Command, Stdio};
+use tera::{Context, Tera};
 use tui_textarea::TextArea;
 
+#[derive(Serialize, Default)]
+pub struct Commit {
+    pub title: Vec<String>,
+    pub description: Vec<String>,
+    pub steps: Vec<String>,
+    pub expected_description: Vec<String>,
+    pub system_before: Vec<String>,
+    pub system_after: Vec<String>,
+    pub expectation: Vec<String>,
+    pub samples: Vec<String>,
+    pub vulnerabilities: Vec<String>,
+    pub qualities: Vec<String>,
+    pub conforms: Vec<String>,
+    pub risks: Vec<String>,
+    pub tests_added: Vec<String>,
+    pub tests_updated: Vec<String>,
+    pub tests_deleted: Vec<String>,
+    pub platforms: Vec<String>,
+    pub breaking_changes: Vec<String>,
+    pub dependencies: Vec<String>,
+    pub rollbacks: Vec<String>,
+    pub up_migrations: Vec<String>,
+    pub down_migrations: Vec<String>,
+    pub changes: Vec<String>,
+    pub migration_why: Vec<String>,
+    pub authors: Vec<String>,
+    pub testers: Vec<String>,
+    pub comments: Vec<String>,
+    pub notes: Vec<String>,
+    pub packages: Vec<String>,
+}
 enum PageIndex {
     Page0,
     Page1,
@@ -24,25 +59,25 @@ enum PageIndex {
 impl Display for PageIndex {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            PageIndex::Page0 => {
+            Page0 => {
                 write!(f, " /dev/null <== page 1/7 ==> Resolution ")
             }
-            PageIndex::Page1 => {
+            Page1 => {
                 write!(f, " Problematics <== page 2/7 ==> Security ")
             }
-            PageIndex::Page2 => {
+            Page2 => {
                 write!(f, " Resolution <== page 3/7 ==> Tests ")
             }
-            PageIndex::Page3 => {
+            Page3 => {
                 write!(f, " Security <== page 4/7 ==> Requirements ")
             }
-            PageIndex::Page4 => {
+            Page4 => {
                 write!(f, " Tests <== page 5/7 ==> Database ")
             }
-            PageIndex::Page5 => {
+            Page5 => {
                 write!(f, " Requirements <== page 6/7 ==> Communication ")
             }
-            PageIndex::Page6 => {
+            Page6 => {
                 write!(f, " Database <== page 7/7 ==> /dev/null ")
             }
         }
@@ -122,6 +157,12 @@ impl App {
         })
     }
 }
+
+fn get_lines(pages: &mut [Page], page_index: PageIndex, area: usize) -> Vec<String> {
+    let x = pages.get_mut(page_index as usize).unwrap();
+    let y = x.areas.get_mut(area).unwrap();
+    y.lines().to_vec()
+}
 fn inactivate(textarea: &mut TextArea<'_>, title: &str, describe: &str) {
     textarea.set_cursor_line_style(Style::default());
     textarea.set_cursor_style(Style::default());
@@ -133,6 +174,39 @@ fn inactivate(textarea: &mut TextArea<'_>, title: &str, describe: &str) {
             .title(format!(" {title} "))
             .title_bottom(format!(" {describe} ")),
     );
+}
+
+fn update_commit(page: &mut [Page]) -> Commit {
+    Commit {
+        title: get_lines(page, Page0, 0),
+        description: get_lines(page, Page0, 1),
+        steps: get_lines(page, Page0, 2),
+        expected_description: get_lines(page, Page0, 3),
+        system_before: get_lines(page, Page1, 0),
+        system_after: get_lines(page, Page1, 1),
+        expectation: get_lines(page, Page1, 2),
+        samples: get_lines(page, Page1, 3),
+        vulnerabilities: get_lines(page, Page2, 0),
+        qualities: get_lines(page, Page2, 1),
+        conforms: get_lines(page, Page2, 2),
+        risks: get_lines(page, Page2, 3),
+        tests_added: get_lines(page, Page3, 0),
+        tests_updated: get_lines(page, Page3, 1),
+        tests_deleted: get_lines(page, Page3, 2),
+        platforms: get_lines(page, Page3, 3),
+        breaking_changes: get_lines(page, Page4, 0),
+        dependencies: get_lines(page, Page4, 1),
+        packages: get_lines(page, Page4, 2),
+        rollbacks: get_lines(page, Page4, 3),
+        up_migrations: get_lines(page, Page5, 0),
+        down_migrations: get_lines(page, Page5, 1),
+        changes: get_lines(page, Page5, 2),
+        migration_why: get_lines(page, Page5, 3),
+        authors: get_lines(page, Page6, 0),
+        testers: get_lines(page, Page6, 1),
+        comments: get_lines(page, Page6, 2),
+        notes: get_lines(page, Page6, 3),
+    }
 }
 fn update(witch: usize, page: &mut Page) {
     for (i, area) in page.areas.iter_mut().enumerate() {
@@ -219,7 +293,7 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
                 TextArea::default(),
                 TextArea::default(),
             ],
-            current_page: PageIndex::Page0,
+            current_page: Page0,
             titles: ["Title", "Description", "Steps to reproduce", "Expectation"],
             describe: [
                 "Indicate the problem title",
@@ -236,7 +310,7 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
                 TextArea::default(),
                 TextArea::default(),
             ],
-            current_page: PageIndex::Page1,
+            current_page: Page1,
             titles: ["Before", "After", "Results", "Samples"],
             describe: [
                 "Describe the state before the implementation of the resolution",
@@ -253,7 +327,7 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
                 TextArea::default(),
                 TextArea::default(),
             ],
-            current_page: PageIndex::Page2,
+            current_page: Page2,
             titles: ["Vulnerability", "Quality", "Conformity", "Risk"],
             describe: [
                 "Describe potential security vulnerabilities",
@@ -270,7 +344,7 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
                 TextArea::default(),
                 TextArea::default(),
             ],
-            current_page: PageIndex::Page3,
+            current_page: Page3,
             titles: ["Added", "Updated", "Deleted", "Platforms"],
             describe: [
                 "Describe the new tests added",
@@ -287,8 +361,13 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
                 TextArea::default(),
                 TextArea::default(),
             ],
-            current_page: PageIndex::Page4,
-            titles: ["Breaking changes", "New needed dependencies", "New packages needed", "Rollback"],
+            current_page: Page4,
+            titles: [
+                "Breaking changes",
+                "New needed dependencies",
+                "New packages needed",
+                "Rollback",
+            ],
             describe: [
                 "Indicate if the code have a breaking changes",
                 "Indicate the new needed dependencies",
@@ -304,7 +383,7 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
                 TextArea::default(),
                 TextArea::default(),
             ],
-            current_page: PageIndex::Page5,
+            current_page: Page5,
             titles: ["Up", "Down", "Changes", "Why"],
             describe: [
                 "What's it's created on up",
@@ -321,7 +400,7 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
                 TextArea::default(),
                 TextArea::default(),
             ],
-            current_page: PageIndex::Page6,
+            current_page: Page6,
             titles: ["Authors", "Testers", "Comments", "Notes"],
             describe: [
                 "Authors name's",
@@ -333,16 +412,10 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
     ];
     let mut page: usize = 0;
     let mut witch: usize = 0;
-
+    let mut commit_message: Commit = update_commit(&mut pages);
     loop {
         match pages[page].current_page {
-            PageIndex::Page0
-            | PageIndex::Page1
-            | PageIndex::Page2
-            | PageIndex::Page3
-            | PageIndex::Page4
-            | PageIndex::Page5
-            | PageIndex::Page6 => {
+            Page0 | Page1 | Page2 | Page3 | Page4 | Page5 | Page6 => {
                 assert!(app
                     .render_commit(
                         rei,
@@ -359,6 +432,64 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
         if let Ok(Event::Key(key)) = event::read() {
             if key.code == KeyCode::Esc {
                 break;
+            } else if key.code == KeyCode::F(6) {
+                let tera = match Tera::new("/usr/share/rei/*.tera") {
+                    Ok(t) => t,
+                    Err(e) => {
+                        println!("Error parsing templates: {}", e);
+                        std::process::exit(1);
+                    }
+                };
+
+                let mut context = Context::new();
+                context.insert("title", &commit_message.title);
+                context.insert("description", &commit_message.description);
+                context.insert("steps", &commit_message.steps);
+                context.insert("expected_description", &commit_message.expected_description);
+                context.insert("system_before", &commit_message.system_before);
+                context.insert("system_after", &commit_message.system_after);
+                context.insert("expectation", &commit_message.expectation);
+                context.insert("samples", &commit_message.samples);
+                context.insert("vulnerabilities", &commit_message.vulnerabilities);
+                context.insert("qualities", &commit_message.qualities);
+                context.insert("conforms", &commit_message.conforms);
+                context.insert("risks", &commit_message.risks);
+                context.insert("tests_added", &commit_message.tests_added);
+                context.insert("tests_updated", &commit_message.tests_updated);
+                context.insert("tests_deleted", &commit_message.tests_deleted);
+                context.insert("platforms", &commit_message.platforms);
+                context.insert("breaking_changes", &commit_message.breaking_changes);
+                context.insert("dependencies", &commit_message.dependencies);
+                context.insert("rollbacks", &commit_message.rollbacks);
+                context.insert("up_migrations", &commit_message.up_migrations);
+                context.insert("down_migrations", &commit_message.down_migrations);
+                context.insert("changes", &commit_message.changes);
+                context.insert("migration_why", &commit_message.migration_why);
+                context.insert("authors", &commit_message.authors);
+                context.insert("testers", &commit_message.testers);
+                context.insert("comments", &commit_message.comments);
+                context.insert("notes", &commit_message.notes);
+                match tera.render("commit.tera", &context) {
+                    Ok(message) => {
+                        if Command::new("git")
+                            .stdout(Stdio::null())
+                            .stderr(Stdio::null())
+                            .arg("commit")
+                            .arg("-m")
+                            .arg(message)
+                            .current_dir(".")
+                            .spawn()
+                            .expect("git")
+                            .wait()
+                            .expect("wait")
+                            .success()
+                        {
+                            commit_message = Commit::default();
+                            let _ = commit(rei, app);
+                        }
+                    }
+                    Err(e) => println!("Error rendering template: {}", e),
+                };
             } else if key.code == KeyCode::PageUp {
                 witch = 0;
                 if page.lt(&(pages.len() - 1)) {
@@ -380,6 +511,7 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
                 }
             } else {
                 pages[page].areas.get_mut(witch).expect("").input(key);
+                commit_message = update_commit(&mut pages);
             }
         }
     }

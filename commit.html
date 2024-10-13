@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            {% if title | length > 0 %}
+                {{ title}}
+            {% else %}
+                Default Title
+            {% endif %}
+        </title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+            }
+            pre {
+                background-color: #f4f4f4;
+                padding: 10px;
+                border-radius: 5px;
+                overflow-x: auto;
+                margin: 20px 0;
+            }
+            code {
+                font-family: "Courier New", Courier, monospace;
+                font-size: 1em;
+                color: #333;
+            }
+            section {
+                margin-bottom: 40px;
+            }
+            h1, h2, h3 {
+                color: #333;
+            }
+            ul, ol {
+                padding-left: 20px;
+            }
+            footer {
+                text-align: center;
+                margin-top: 50px;
+                font-size: 0.9em;
+                color: #777;
+            }
+        </style>
+    </head>
+    <body>
+        <section>
+            <header>
+                <h1>
+                    {% if title | length > 0 %}
+                        {{ title}}
+                    {% else %}
+                        Default Title
+                    {% endif %}
+                </h1>
+                <p>
+                    {% if description | length > 0 %}
+                        {{ description}}
+                    {% else %}
+                        No description available
+                    {% endif %}
+                </p>
+            </header>
+            <article>
+                <header>
+                    <h2>Steps to reproduce</h2>
+                    <p>Steps necessary to reproduce the changes introduced in this commit</p>
+                </header>
+                <ol>
+                    {% if steps | length > 0 %}
+                        {% for step in steps %}
+                        <li>{{ step }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No steps provided</li>
+                    {% endif %}
+                </ol>
+            </article>
+            <article>
+                <header>
+                    <h2>Expected behavior</h2>
+                </header>
+                <p>
+                    {% if expected_description | length > 0 %}
+                        {{ expected_description }}
+                    {% else %}
+                        No expected behavior provided
+                    {% endif %}
+                </p>
+            </article>
+            <section>
+                <header>
+                    <h2>Resolution</h2>
+                    <p>Explains the state of the system before and after the changes</p>
+                </header>
+                <article>
+                    <header>
+                        <h3>Before</h3>
+                    </header>
+                    <p>
+                        {% if system_before | length > 0 %}
+                            {{ system_before }}
+                        {% else %}
+                            No previous state provided
+                        {% endif %}
+                    </p>
+                </article>
+                <article>
+                    <header>
+                        <h3>After</h3>
+                    </header>
+                    <p>
+                        {% if system_after | length > 0 %}
+                            {{ system_after }}
+                        {% else %}
+                            No changes state provided
+                        {% endif %}
+                    </p>
+                </article>
+                <article>
+                    <header>
+                        <h3>Expectation</h3>
+                    </header>
+                    <p>
+                        {% if expectation | length > 0 %}
+                            {{ expectation }}
+                        {% else %}
+                            No expectation provided
+                        {% endif %}
+                    </p>
+                </article>
+                <article>
+                    <header>
+                        <h3>Samples</h3>
+                    </header>
+                    <pre>
+                        <code>
+                            {% if samples | length > 0 %}
+                                {{ samples }}
+                            {% else %}
+                                No samples provided
+                            {% endif %}
+                        </code>
+                    </pre>
+                </article>
+            </section>
+        </section>
+        <section>
+            <header>
+                <h2>Security</h2>
+                <p>The security section discusses any security-related impacts that may arise from the newly added authentication system</p>
+            </header>
+            <article>
+                <header>
+                    <h3>Vulnerability</h3>
+                </header>
+                <ul>
+                    {% if vulnerabilities | length > 0 %}
+                        {% for vulnerability in vulnerabilities %}
+                        <li>{{ vulnerability }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No vulnerabilities listed</li>
+                    {% endif %}
+                </ul>
+            </article>
+        </section>
+        <section>
+            <header>
+                <h2>Tests</h2>
+            </header>
+            <article>
+                <header>
+                    <h3>Added Tests</h3>
+                </header>
+                <ul>
+                    {% if tests_added | length > 0 %}
+                        {% for added in tests_added %}
+                        <li>{{ added }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No tests added</li>
+                    {% endif %}
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <h3>Updated Tests</h3>
+                </header>
+                <ul>
+                    {% if tests_updated | length > 0 %}
+                        {% for updated in tests_updated %}
+                        <li>{{ updated }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No tests updated</li>
+                    {% endif %}
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <h3>Deleted Tests</h3>
+                </header>
+                <ul>
+                    {% if tests_deleted | length > 0 %}
+                        {% for deleted in tests_deleted %}
+                        <li>{{ deleted }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No tests deleted</li>
+                    {% endif %}
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <h3>Platforms</h3>
+                </header>
+                <ul>
+                    {% if platforms | length > 0 %}
+                        {% for platform in platforms %}
+                        <li>{{ platform }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No platforms listed</li>
+                    {% endif %}
+                </ul>
+            </article>
+        </section>
+        <section>
+            <header>
+                <h2>Requirements</h2>
+            </header>
+            <article>
+                <header>
+                    <h3>BREAKING CHANGES</h3>
+                </header>
+                <ul>
+                    {% if breaking_changes | length > 0 %}
+                        {% for breaking_change in breaking_changes %}
+                        <li>{{ breaking_change }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No breaking changes</li>
+                    {% endif %}
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <h3>New Dependencies</h3>
+                </header>
+                <ul>
+                    {% if dependencies | length > 0 %}
+                        {% for dependency in dependencies %}
+                        <li>{{ dependency }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No new dependencies</li>
+                    {% endif %}
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <h3>Rollback</h3>
+                </header>
+                <ul>
+                    {% if rollbacks | length > 0 %}
+                        {% for rollback in rollbacks %}
+                        <li>{{ rollback }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No rollback instructions provided</li>
+                    {% endif %}
+                </ul>
+            </article>
+        </section>
+        <section>
+            <header>
+                <h2>Database</h2>
+            </header>
+            <article>
+                <header>
+                    <h3>Up Migration</h3>
+                </header>
+                <ul>
+                    <li>On up
+                        <ul>
+                            {% if up_migrations | length > 0 %}
+                                {% for up in up_migrations %}
+                                <li>{{ up }}</li>
+                                {% endfor %}
+                            {% else %}
+                                <li>No up migrations provided</li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <h3>Down Migration</h3>
+                </header>
+                <ul>
+                    <li>On down
+                        <ul>
+                            {% if down_migrations | length > 0 %}
+                                {% for down in down_migrations %}
+                                <li>{{ down }}</li>
+                                {% endfor %}
+                            {% else %}
+                                <li>No down migrations provided</li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <h3>Changes</h3>
+                </header>
+                <ul>
+                    {% if changes | length > 0 %}
+                        {% for change in changes %}
+                        <li>{{ change }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No changes listed</li>
+                    {% endif %}
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <h3>Why</h3>
+                </header>
+                <p>
+                    {% if migration_why | length > 0 %}
+                        {{ migration_why }}
+                    {% else %}
+                        No reason for migration provided
+                    {% endif %}
+                </p>
+            </article>
+        </section>
+        <section>
+            <header>
+                <h2>Communication</h2>
+            </header>
+            <article>
+                <header>
+                    <h3>Authors</h3>
+                </header>
+                <ul>
+                    {% if authors | length > 0 %}
+                        {% for author in authors %}
+                        <li>{{ author }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No authors listed</li>
+                    {% endif %}
+                </ul>
+            </article>
+            <article>²
+                <header>
+                    <h3>Testers</h3>
+                </header>
+                <ul>
+                    {% if testers | length > 0 %}
+                        {% for tester in testers %}
+                        <li>{{ tester }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No testers listed</li>
+                    {% endif %}
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <h3>Comments</h3>
+                </header>
+                <ul>
+                    {% if comments | length > 0 %}
+                        {% for comment in comments %}
+                        <li>{{ comment }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No comments listed</li>
+                    {% endif %}
+                </ul>
+            </article>
+            <article>
+                <header>
+                    <h3>Notes</h3>
+                </header>
+                <ul>
+                    {% if notes | length > 0 %}
+                        {% for note in notes %}
+                        <li>{{ note }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No notes listed</li>
+                    {% endif %}
+                </ul>
+            </article>
+        </section>
+    </body>
+</html>
