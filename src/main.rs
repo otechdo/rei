@@ -249,7 +249,7 @@ impl Display for PageIndex {
                 write!(f, " Database <== page 7/9 ==> Ideas ")
             }
             Page7 => {
-                write!(f, " Communication <== page 8/9 ==> Todo ")
+                write!(f, " Communication <== page 8/9 ==> Next ")
             }
             Page8 => {
                 write!(f, " Ideas <== page 9/9 ==> /dev/null ")
