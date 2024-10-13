@@ -1,7 +1,7 @@
 #![allow(clippy::too_many_lines)]
 #![allow(clippy::multiple_crate_versions)]
 
-use crate::PageIndex::{Page0, Page1, Page2, Page3, Page4, Page5, Page6};
+use crate::PageIndex::{Page0, Page1, Page2, Page3, Page4, Page5, Page6, Page7, Page8};
 use crossterm::event::{self, Event, KeyCode};
 use ratatui::backend::CrosstermBackend;
 use ratatui::layout::{Alignment, Constraint, Direction, Layout};
@@ -9,7 +9,7 @@ use ratatui::style::{Color, Style, Stylize};
 use ratatui::widgets::{Block, BorderType, Borders, Padding};
 use ratatui::{CompletedFrame, Terminal};
 use serde::Serialize;
-use std::fmt::{Debug, Display, Formatter};
+use std::fmt::{Display, Formatter};
 use std::io::Stdout;
 use std::process::{Command, Stdio};
 use tui_textarea::TextArea;
@@ -134,6 +134,42 @@ The security section discusses any security-related impacts that may arise from 
 
 %notes%
 
+## Ideas
+
+### News headline
+
+%news_headline%
+
+### Workflow
+
+%workflow%
+
+### Examples
+
+%workflows_samples%
+
+### Technical considerations
+
+%technical_considerations%
+
+## Next
+
+### Description
+
+%next_description%
+
+### Motivation
+
+%next_motivation%
+
+### Why implement it
+
+%next_reasons%
+
+### Related Links
+
+%next_links%
+
 ";
 
 #[derive(Serialize, Default)]
@@ -166,7 +202,16 @@ pub struct Commit {
     pub comments: String,
     pub notes: String,
     pub packages: String,
+    pub news_headline: String,
+    pub workflow: String,
+    pub workflows_samples: String,
+    pub technical_considerations: String,
+    pub next_features: String,
+    pub next_motivation: String,
+    pub next_reasons: String,
+    pub next_resources: String,
 }
+
 enum PageIndex {
     Page0,
     Page1,
@@ -175,31 +220,39 @@ enum PageIndex {
     Page4,
     Page5,
     Page6,
+    Page7,
+    Page8,
 }
 
 impl Display for PageIndex {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Page0 => {
-                write!(f, " /dev/null <== page 1/7 ==> Resolution ")
+                write!(f, " /dev/null <== page 1/9 ==> Resolution ")
             }
             Page1 => {
-                write!(f, " Problematics <== page 2/7 ==> Security ")
+                write!(f, " Problematics <== page 2/9 ==> Security ")
             }
             Page2 => {
-                write!(f, " Resolution <== page 3/7 ==> Tests ")
+                write!(f, " Resolution <== page 3/9 ==> Tests ")
             }
             Page3 => {
-                write!(f, " Security <== page 4/7 ==> Requirements ")
+                write!(f, " Security <== page 4/9 ==> Requirements ")
             }
             Page4 => {
-                write!(f, " Tests <== page 5/7 ==> Database ")
+                write!(f, " Tests <== page 5/9 ==> Database ")
             }
             Page5 => {
-                write!(f, " Requirements <== page 6/7 ==> Communication ")
+                write!(f, " Requirements <== page 6/9 ==> Communication ")
             }
             Page6 => {
-                write!(f, " Database <== page 7/7 ==> /dev/null ")
+                write!(f, " Database <== page 7/9 ==> Ideas ")
+            }
+            Page7 => {
+                write!(f, " Communication <== page 8/9 ==> Todo ")
+            }
+            Page8 => {
+                write!(f, " Ideas <== page 9/9 ==> /dev/null ")
             }
         }
     }
@@ -318,6 +371,14 @@ fn update_commit(page: &mut [Page]) -> Commit {
         breaking_changes: get_lines(page, Page4, 0),
         dependencies: get_lines(page, Page4, 1),
         packages: get_lines(page, Page4, 2),
+        news_headline: get_lines(page, Page7, 0),
+        workflow: get_lines(page, Page7, 1),
+        workflows_samples: get_lines(page, Page7, 2),
+        technical_considerations: get_lines(page, Page7, 3),
+        next_features: get_lines(page, Page8, 0),
+        next_motivation: get_lines(page, Page8, 1),
+        next_reasons: get_lines(page, Page8, 2),
+        next_resources: get_lines(page, Page8, 3),
         rollbacks: get_lines(page, Page4, 3),
         up_migrations: get_lines(page, Page5, 0),
         down_migrations: get_lines(page, Page5, 1),
@@ -531,13 +592,57 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
                 "Indicate important remarks and observations",
             ],
         },
+        Page {
+            main_title: "Ideas",
+            areas: [
+                TextArea::default(),
+                TextArea::default(),
+                TextArea::default(),
+                TextArea::default(),
+            ],
+            current_page: Page7,
+            titles: [
+                "News headline",
+                "Workflow samples",
+                "Examples",
+                "Technical considerations",
+            ],
+            describe: [
+                "News headline and brief description",
+                "Workflow steps and user interactions",
+                "Code examples or visual mockups",
+                "Technical considerations",
+            ],
+        },
+        Page {
+            main_title: "Next",
+            areas: [
+                TextArea::default(),
+                TextArea::default(),
+                TextArea::default(),
+                TextArea::default(),
+            ],
+            current_page: Page8,
+            titles: [
+                "To Implement",
+                "Motivation",
+                "Implementation Plan",
+                "Related links",
+            ],
+            describe: [
+                "Description of the feature",
+                "Reasons for implementing this feature",
+                "Technical approach and steps involved",
+                "Links to relevant resources",
+            ],
+        },
     ];
     let mut page: usize = 0;
     let mut witch: usize = 0;
     let mut commit_message: Commit = update_commit(&mut pages);
     loop {
         match pages[page].current_page {
-            Page0 | Page1 | Page2 | Page3 | Page4 | Page5 | Page6 => {
+            Page0 | Page1 | Page2 | Page3 | Page4 | Page5 | Page6 | Page7 | Page8 => {
                 assert!(app
                     .render_commit(
                         rei,
@@ -586,7 +691,18 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
                     .replace("%authors%", &commit_message.authors)
                     .replace("%testers%", &commit_message.testers)
                     .replace("%comments%", &commit_message.comments)
-                    .replace("%notes%", &commit_message.notes);
+                    .replace("%notes%", &commit_message.notes)
+                    .replace("%news_headline%", &commit_message.news_headline)
+                    .replace("%workflow%", &commit_message.workflow)
+                    .replace("%workflows_samples%", &commit_message.workflows_samples)
+                    .replace(
+                        "%technical_considerations%",
+                        &commit_message.technical_considerations,
+                    )
+                    .replace("%next_motivation%", &commit_message.next_motivation)
+                    .replace("%next_description%", &commit_message.next_features)
+                    .replace("%next_reasons%", &commit_message.next_reasons)
+                    .replace("%next_links%", &commit_message.next_resources);
 
                 assert!(Command::new("git")
                     .stdout(Stdio::null())
