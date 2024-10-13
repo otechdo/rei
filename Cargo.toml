@@ -10,8 +10,7 @@ repository  = "https://github.com/otechdo/rei"
 license = "AGPL-3"
 [dependencies]
 ratatui = { version = "0.28.1", features = ["palette", "all-widgets", "document-features", "macros"] }
-ratatui-textarea = { version = "0.4.1", features = ["search", "ratatui"] }
-tui-textarea = { version = "0.6.1", features = ["search"] }
+tui-textarea = { version = "0.6.1", features = ["search", "ratatui"] }
 crossterm = "0.28.1"
 
 [features]
