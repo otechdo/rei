@@ -12,7 +12,6 @@ license = "AGPL-3"
 ratatui = { version = "0.28.1", features = ["palette", "all-widgets", "document-features", "macros"] }
 tui-textarea = { version = "0.6.1", features = ["search", "ratatui"] }
 crossterm = "0.28.1"
-tera = "1.20.0"
 serde = { version = "1.0.210", features = ["derive"] }
 
 [features]

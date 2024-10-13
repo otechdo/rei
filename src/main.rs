@@ -9,42 +9,163 @@ use ratatui::style::{Color, Style, Stylize};
 use ratatui::widgets::{Block, BorderType, Borders, Padding};
 use ratatui::{CompletedFrame, Terminal};
 use serde::Serialize;
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 use std::io::Stdout;
 use std::process::{Command, Stdio};
-use tera::{Context, Tera};
 use tui_textarea::TextArea;
+
+const COMMIT_TEMPLATE :&str = "# %title%
+
+%description%
+
+### Steps to reproduce
+
+%steps%
+
+### Expected behavior
+
+%expected_description%
+
+## Resolution
+
+Explains the state of the system before and after the changes
+
+### Before
+
+%system_before%
+
+### After
+
+%system_after%
+
+### Expectation
+
+%expectation%
+
+### Samples
+
+%samples%
+
+## Security
+
+The security section discusses any security-related impacts that may arise from the newly added authentication system
+
+### Vulnerabilities
+
+%vulnerabilities%
+
+### Quality
+
+%qualities%
+
+### Conformity
+
+%conformity%
+
+### Risk
+
+%risk%
+
+## Tests
+
+### Added
+
+%tests_added%
+
+### Updated
+
+%tests_updated%
+
+### Deleted
+
+%test_deleted%
+
+### Platforms
+
+%tested_platforms%
+
+## Requirements
+
+### BREAKING CHANGES
+
+%breaking_changes%
+
+### Dependencies
+
+%dependencies%
+
+### Rollback
+
+%rollbacks%
+
+## Database
+
+### Up
+
+%db_up%
+
+### Down
+
+%db_down%
+
+### Changes
+
+%db_changes%
+
+### Why
+
+%why_db_changes%
+
+## Communication
+
+### Authors
+
+%authors%
+
+### Testers
+
+%testers%
+
+### Comments
+
+%comments%
+
+### Notes
+
+%notes%
+
+";
 
 #[derive(Serialize, Default)]
 pub struct Commit {
-    pub title: Vec<String>,
-    pub description: Vec<String>,
-    pub steps: Vec<String>,
-    pub expected_description: Vec<String>,
-    pub system_before: Vec<String>,
-    pub system_after: Vec<String>,
-    pub expectation: Vec<String>,
-    pub samples: Vec<String>,
-    pub vulnerabilities: Vec<String>,
-    pub qualities: Vec<String>,
-    pub conforms: Vec<String>,
-    pub risks: Vec<String>,
-    pub tests_added: Vec<String>,
-    pub tests_updated: Vec<String>,
-    pub tests_deleted: Vec<String>,
-    pub platforms: Vec<String>,
-    pub breaking_changes: Vec<String>,
-    pub dependencies: Vec<String>,
-    pub rollbacks: Vec<String>,
-    pub up_migrations: Vec<String>,
-    pub down_migrations: Vec<String>,
-    pub changes: Vec<String>,
-    pub migration_why: Vec<String>,
-    pub authors: Vec<String>,
-    pub testers: Vec<String>,
-    pub comments: Vec<String>,
-    pub notes: Vec<String>,
-    pub packages: Vec<String>,
+    pub title: String,
+    pub description: String,
+    pub steps: String,
+    pub expected_description: String,
+    pub system_before: String,
+    pub system_after: String,
+    pub expectation: String,
+    pub samples: String,
+    pub vulnerabilities: String,
+    pub qualities: String,
+    pub conforms: String,
+    pub risks: String,
+    pub tests_added: String,
+    pub tests_updated: String,
+    pub tests_deleted: String,
+    pub platforms: String,
+    pub breaking_changes: String,
+    pub dependencies: String,
+    pub rollbacks: String,
+    pub up_migrations: String,
+    pub down_migrations: String,
+    pub changes: String,
+    pub migration_why: String,
+    pub authors: String,
+    pub testers: String,
+    pub comments: String,
+    pub notes: String,
+    pub packages: String,
 }
 enum PageIndex {
     Page0,
@@ -158,10 +279,10 @@ impl App {
     }
 }
 
-fn get_lines(pages: &mut [Page], page_index: PageIndex, area: usize) -> Vec<String> {
+fn get_lines(pages: &mut [Page], page_index: PageIndex, area: usize) -> String {
     let x = pages.get_mut(page_index as usize).unwrap();
     let y = x.areas.get_mut(area).unwrap();
-    y.lines().to_vec()
+    y.lines().join("\n")
 }
 fn inactivate(textarea: &mut TextArea<'_>, title: &str, describe: &str) {
     textarea.set_cursor_line_style(Style::default());
@@ -283,6 +404,7 @@ fn activate(textarea: &mut TextArea<'_>, title: &str, describe: &str) {
         );
     }
 }
+
 fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Result<()> {
     let mut pages = [
         Page {
@@ -433,63 +555,52 @@ fn commit(rei: &mut Terminal<CrosstermBackend<Stdout>>, app: App) -> std::io::Re
             if key.code == KeyCode::Esc {
                 break;
             } else if key.code == KeyCode::F(6) {
-                let tera = match Tera::new("/usr/share/rei/*.tera") {
-                    Ok(t) => t,
-                    Err(e) => {
-                        println!("Error parsing templates: {}", e);
-                        std::process::exit(1);
-                    }
-                };
+                let message = COMMIT_TEMPLATE
+                    .replace("%title%", &commit_message.title)
+                    .replace("%description%", &commit_message.description)
+                    .replace("%steps%", &commit_message.steps)
+                    .replace(
+                        "%expected_description%",
+                        &commit_message.expected_description,
+                    )
+                    .replace("%system_before%", &commit_message.system_before)
+                    .replace("%system_after%", &commit_message.system_after)
+                    .replace("%system_before%", &commit_message.system_before)
+                    .replace("%expectation%", &commit_message.expectation)
+                    .replace("%samples%", &commit_message.samples)
+                    .replace("%vulnerabilities%", &commit_message.vulnerabilities)
+                    .replace("%qualities%", &commit_message.qualities)
+                    .replace("%conformity%", &commit_message.conforms)
+                    .replace("%risk%", &commit_message.risks)
+                    .replace("%tests_added%", &commit_message.tests_added)
+                    .replace("%tests_updated%", &commit_message.tests_updated)
+                    .replace("%test_deleted%", &commit_message.tests_deleted)
+                    .replace("%tested_platforms%", &commit_message.platforms)
+                    .replace("%breaking_changes%", &commit_message.breaking_changes)
+                    .replace("%dependencies%", &commit_message.dependencies)
+                    .replace("%rollbacks%", &commit_message.rollbacks)
+                    .replace("%db_up%", &commit_message.up_migrations)
+                    .replace("%db_down%", &commit_message.down_migrations)
+                    .replace("%db_changes%", &commit_message.changes)
+                    .replace("%why_db_changes%", &commit_message.migration_why)
+                    .replace("%authors%", &commit_message.authors)
+                    .replace("%testers%", &commit_message.testers)
+                    .replace("%comments%", &commit_message.comments)
+                    .replace("%notes%", &commit_message.notes);
 
-                let mut context = Context::new();
-                context.insert("title", &commit_message.title);
-                context.insert("description", &commit_message.description);
-                context.insert("steps", &commit_message.steps);
-                context.insert("expected_description", &commit_message.expected_description);
-                context.insert("system_before", &commit_message.system_before);
-                context.insert("system_after", &commit_message.system_after);
-                context.insert("expectation", &commit_message.expectation);
-                context.insert("samples", &commit_message.samples);
-                context.insert("vulnerabilities", &commit_message.vulnerabilities);
-                context.insert("qualities", &commit_message.qualities);
-                context.insert("conforms", &commit_message.conforms);
-                context.insert("risks", &commit_message.risks);
-                context.insert("tests_added", &commit_message.tests_added);
-                context.insert("tests_updated", &commit_message.tests_updated);
-                context.insert("tests_deleted", &commit_message.tests_deleted);
-                context.insert("platforms", &commit_message.platforms);
-                context.insert("breaking_changes", &commit_message.breaking_changes);
-                context.insert("dependencies", &commit_message.dependencies);
-                context.insert("rollbacks", &commit_message.rollbacks);
-                context.insert("up_migrations", &commit_message.up_migrations);
-                context.insert("down_migrations", &commit_message.down_migrations);
-                context.insert("changes", &commit_message.changes);
-                context.insert("migration_why", &commit_message.migration_why);
-                context.insert("authors", &commit_message.authors);
-                context.insert("testers", &commit_message.testers);
-                context.insert("comments", &commit_message.comments);
-                context.insert("notes", &commit_message.notes);
-                match tera.render("commit.tera", &context) {
-                    Ok(message) => {
-                        if Command::new("git")
-                            .stdout(Stdio::null())
-                            .stderr(Stdio::null())
-                            .arg("commit")
-                            .arg("-m")
-                            .arg(message)
-                            .current_dir(".")
-                            .spawn()
-                            .expect("git")
-                            .wait()
-                            .expect("wait")
-                            .success()
-                        {
-                            commit_message = Commit::default();
-                            let _ = commit(rei, app);
-                        }
-                    }
-                    Err(e) => println!("Error rendering template: {}", e),
-                };
+                assert!(Command::new("git")
+                    .stdout(Stdio::null())
+                    .stderr(Stdio::null())
+                    .arg("commit")
+                    .arg("-m")
+                    .arg(message)
+                    .current_dir(".")
+                    .spawn()
+                    .expect("git not founded")
+                    .wait()
+                    .is_ok());
+                commit_message = Commit::default();
+                let _ = commit(rei, app);
             } else if key.code == KeyCode::PageUp {
                 witch = 0;
                 if page.lt(&(pages.len() - 1)) {

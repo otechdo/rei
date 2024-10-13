@@ -4,11 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
-            {% if title | length > 0 %}
-                {{ title}}
-            {% else %}
-                Default Title
-            {% endif %}
+
         </title>
         <style>
             body {
@@ -64,7 +60,7 @@
             </header>
             <article>
                 <header>
-                    <h2>Steps to reproduce</h2>
+                    <h2></h2>
                     <p>Steps necessary to reproduce the changes introduced in this commit</p>
                 </header>
                 <ol>
@@ -79,10 +75,10 @@
             </article>
             <article>
                 <header>
-                    <h2>Expected behavior</h2>
+                    <h2></h2>
                 </header>
                 <p>
-                    {% if expected_description | length > 0 %}
+                    {% if  | length > 0 %}
                         {{ expected_description }}
                     {% else %}
                         No expected behavior provided
@@ -91,15 +87,15 @@
             </article>
             <section>
                 <header>
-                    <h2>Resolution</h2>
-                    <p>Explains the state of the system before and after the changes</p>
+                    <h2></h2>
+                    <p>E</p>
                 </header>
                 <article>
                     <header>
-                        <h3>Before</h3>
+                        <h3></h3>
                     </header>
                     <p>
-                        {% if system_before | length > 0 %}
+                        {% if  | length > 0 %}
                             {{ system_before }}
                         {% else %}
                             No previous state provided
@@ -111,7 +107,7 @@
                         <h3>After</h3>
                     </header>
                     <p>
-                        {% if system_after | length > 0 %}
+                        {% if  | length > 0 %}
                             {{ system_after }}
                         {% else %}
                             No changes state provided
@@ -120,11 +116,11 @@
                 </article>
                 <article>
                     <header>
-                        <h3>Expectation</h3>
+                        <h3></h3>
                     </header>
                     <p>
                         {% if expectation | length > 0 %}
-                            {{ expectation }}
+                            {{  }}
                         {% else %}
                             No expectation provided
                         {% endif %}
@@ -136,7 +132,7 @@
                     </header>
                     <pre>
                         <code>
-                            {% if samples | length > 0 %}
+                            {% if  | length > 0 %}
                                 {{ samples }}
                             {% else %}
                                 No samples provided
@@ -148,12 +144,12 @@
         </section>
         <section>
             <header>
-                <h2>Security</h2>
-                <p>The security section discusses any security-related impacts that may arise from the newly added authentication system</p>
+                <h2></h2>
+                <p></p>
             </header>
             <article>
                 <header>
-                    <h3>Vulnerability</h3>
+                    <h3></h3>
                 </header>
                 <ul>
                     {% if vulnerabilities | length > 0 %}
@@ -168,14 +164,14 @@
         </section>
         <section>
             <header>
-                <h2>Tests</h2>
+                <h2></h2>
             </header>
             <article>
                 <header>
-                    <h3>Added Tests</h3>
+                    <h3></h3>
                 </header>
                 <ul>
-                    {% if tests_added | length > 0 %}
+                    {% if  | length > 0 %}
                         {% for added in tests_added %}
                         <li>{{ added }}</li>
                         {% endfor %}
@@ -189,7 +185,7 @@
                     <h3>Updated Tests</h3>
                 </header>
                 <ul>
-                    {% if tests_updated | length > 0 %}
+                    {% if  | length > 0 %}
                         {% for updated in tests_updated %}
                         <li>{{ updated }}</li>
                         {% endfor %}
@@ -200,7 +196,7 @@
             </article>
             <article>
                 <header>
-                    <h3>Deleted Tests</h3>
+                    <h3> Tests</h3>
                 </header>
                 <ul>
                     {% if tests_deleted | length > 0 %}
@@ -214,7 +210,7 @@
             </article>
             <article>
                 <header>
-                    <h3>Platforms</h3>
+                    <h3></h3>
                 </header>
                 <ul>
                     {% if platforms | length > 0 %}
@@ -229,11 +225,11 @@
         </section>
         <section>
             <header>
-                <h2>Requirements</h2>
+                <h2></h2>
             </header>
             <article>
                 <header>
-                    <h3>BREAKING CHANGES</h3>
+                    <h3></h3>
                 </header>
                 <ul>
                     {% if breaking_changes | length > 0 %}
@@ -247,7 +243,7 @@
             </article>
             <article>
                 <header>
-                    <h3>New Dependencies</h3>
+                    <h3>New </h3>
                 </header>
                 <ul>
                     {% if dependencies | length > 0 %}
@@ -261,10 +257,10 @@
             </article>
             <article>
                 <header>
-                    <h3>Rollback</h3>
+                    <h3></h3>
                 </header>
                 <ul>
-                    {% if rollbacks | length > 0 %}
+                    {% if  | length > 0 %}
                         {% for rollback in rollbacks %}
                         <li>{{ rollback }}</li>
                         {% endfor %}
@@ -276,11 +272,11 @@
         </section>
         <section>
             <header>
-                <h2>Database</h2>
+                <h2></h2>
             </header>
             <article>
                 <header>
-                    <h3>Up Migration</h3>
+                    <h3> Migration</h3>
                 </header>
                 <ul>
                     <li>On up
@@ -333,7 +329,7 @@
                     <h3>Why</h3>
                 </header>
                 <p>
-                    {% if migration_why | length > 0 %}
+                    {% if  | length > 0 %}
                         {{ migration_why }}
                     {% else %}
                         No reason for migration provided
@@ -343,14 +339,14 @@
         </section>
         <section>
             <header>
-                <h2>Communication</h2>
+                <h2></h2>
             </header>
             <article>
                 <header>
-                    <h3>Authors</h3>
+                    <h3></h3>
                 </header>
                 <ul>
-                    {% if authors | length > 0 %}
+                    {% if  | length > 0 %}
                         {% for author in authors %}
                         <li>{{ author }}</li>
                         {% endfor %}
@@ -361,7 +357,7 @@
             </article>
             <article>²
                 <header>
-                    <h3>Testers</h3>
+                    <h3></h3>
                 </header>
                 <ul>
                     {% if testers | length > 0 %}
@@ -378,7 +374,7 @@
                     <h3>Comments</h3>
                 </header>
                 <ul>
-                    {% if comments | length > 0 %}
+                    {% if  | length > 0 %}
                         {% for comment in comments %}
                         <li>{{ comment }}</li>
                         {% endfor %}
@@ -392,7 +388,7 @@
                     <h3>Notes</h3>
                 </header>
                 <ul>
-                    {% if notes | length > 0 %}
+                    {% if  | length > 0 %}
                         {% for note in notes %}
                         <li>{{ note }}</li>
                         {% endfor %}
