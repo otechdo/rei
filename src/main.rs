@@ -14,139 +14,145 @@ use std::io::Stdout;
 use std::process::{Command, Stdio};
 use tui_textarea::TextArea;
 
-const COMMIT_TEMPLATE :&str = "@%title%
+const COMMIT_TEMPLATE :&str = "%title%
 
 %description%
 
-@Steps
+Steps
 
+```bash
 %steps%
+```
 
-@Behavior
+Behavior
 
 %expected_description%
 
-@Before
+Before
 
 %system_before%
 
-@After
+After
 
 %system_after%
 
-@Expectation
+Expectation
 
 %expectation%
 
-@Samples
+Examples
 
 %samples%
 
-@Vulnerabilities
+Vulnerabilities
 
 %vulnerabilities%
 
-@Quality
+Quality
 
 %qualities%
 
-@Conformity
+Conformity
 
 %conformity%
 
-@Risk
+Risk
 
 %risk%
 
-@Added
+Added
 
 %tests_added%
 
-@Updated
+Updated
 
 %tests_updated%
 
-@Deleted
+Deleted
 
 %test_deleted%
 
-@Platforms
+Platforms
 
 %tested_platforms%
 
-@Breaking
+Breaking
 
 %breaking_changes%
 
-@Dependencies
+Dependencies
 
 %dependencies%
 
-@Rollback
+Rollback
 
 %rollbacks%
 
-@Up
+Up
 
+```sql
 %db_up%
+```
 
-@Down
+Down
 
+```sql
 %db_down%
+```
 
-@Changes
+Changes
 
 %db_changes%
 
-@Why
+Why
 
 %why_db_changes%
 
-@Authors
+Authors
 
 %authors%
 
-@Testers
+Testers
 
 %testers%
 
-@Comments
+Comments
 
 %comments%
 
-@Notes
+Notes
 
 %notes%
 
-@Head
+Head
 
 %news_headline%
 
-@Workflow
+Workflow
 
 %workflow%
 
-@Samples
+Samples
 
 %workflows_samples%
 
-@Considerations
+Considerations
 
 %technical_considerations%
 
-@Next
+Next
 
 %next_description%
 
-@Motivation
+Motivation
 
 %next_motivation%
 
-@Why
+Why
 
 %next_reasons%
 
-@Links
+Links
 
 %next_links%
 
